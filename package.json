@@ -1,0 +1,16 @@
+{
+    "name": "@stepanjakl/apostrophe-stripe-checkout",
+    "version": "0.0.0",
+    "description": "Stripe Checkout For Apostrophe 3",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/stepanjakl/apostrophe-stripe-checkout.git"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Štěpán Jákl",
+    "homepage": "https://github.com/stepanjakl/apostrophe-stripe-checkout#readme",
+    "license": "MIT"
+}
