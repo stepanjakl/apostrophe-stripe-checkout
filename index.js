@@ -10,10 +10,10 @@ const bodyParser = require('body-parser')
 module.exports = {
     options: {
         alias: 'stripeCheckout',
-        /* i18n: {
-            ns: 'aposStripeCheckout',
+        i18n: {
+            ns: 'stripeCheckout',
             browser: true
-        } */
+        },
         csrfExceptions: ['/api/v1/stripe/checkout/webhook']
     },
     bundle: {
@@ -110,7 +110,7 @@ module.exports = {
 
                         // console.log('-- -- API -- Stripe Checkout - Webhook - self.apos.task.getAdminReq:', self.apos.task.getAdminReq())
 
-                        await self.apos.stripeCheckoutSession.insert(self.apos.task.getAdminReq(), checkoutSessionInstance)
+                        await self.apos.stripeCheckoutSession.insert(req, checkoutSessionInstance, { permissions: false })
 
 
                     }
