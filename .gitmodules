@@ -1,0 +1,3 @@
+[submodule ".submodules/apostrophe-stripe-products"]
+	path = .submodules/apostrophe-stripe-products
+	url = git@github.com:stepanjakl/apostrophe-stripe-products
