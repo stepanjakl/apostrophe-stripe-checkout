@@ -34,6 +34,7 @@ npm install stripe-checkout@npm:@stepanjakl/apostrophe-stripe-checkout
 - HMTX/Alpine.js examples - clean design (one mostly rounded - one view with rounded body edges)
 - Screenshot with Apostrophe Pro subscription (show upsell value)
 - Manual how to set it up with Stripe
+- `stripe listen --forward-to localhost:5000/api/v1/stripe/checkout/webhook`
 
 ## Subtitle
 

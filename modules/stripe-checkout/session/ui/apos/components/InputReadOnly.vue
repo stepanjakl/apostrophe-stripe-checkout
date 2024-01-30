@@ -8,11 +8,13 @@
             <div class="apos-input-wrapper">
                 <input class="apos-input apos-input--text tooltip-target"
                        readonly
+                       disabled
                        v-model="next"
                        :placeholder="$t(field.placeholder)"
                        :id="uid"
                        :autocomplete="field.autocomplete">
-                <div class="apos-input__button-wrapper">
+                <div v-if="field.copyToClipboard || field.openInNewTab"
+                     class="apos-input__button-wrapper">
                     <AposButton v-if="field.copyToClipboard"
                                 class="apos-input__button"
                                 type="input"
@@ -82,8 +84,8 @@ export default {
         }
     },
     mounted() {
-        this.$el.querySelector('.apos-input__button').addEventListener('blur', this.focusOut)
-        this.$el.querySelector('.apos-input__button').addEventListener('focusout', this.focusOut)
+        this.$el.querySelector('.apos-input__button')?.addEventListener('blur', this.focusOut)
+        this.$el.querySelector('.apos-input__button')?.addEventListener('focusout', this.focusOut)
     },
     methods: {
         copyToClipboard() {
@@ -102,12 +104,14 @@ export default {
 
 <style lang="scss" scoped>
 .apos-input[readonly] {
-    color: var(--a-base-3);
+    color: var(--a-base-2);
     border-color: var(--a-base-8);
-    background-color: var(--a-base-9);
+    background: var(--a-base-9);
+    cursor: text;
 
     &:focus,
     &:active {
+        color: var(--a-base-1);
         box-shadow: 0 0 3px var(--a-base-6);
         border-color: var(--a-base-6);
     }
@@ -125,6 +129,20 @@ export default {
         top: 50%;
         right: 6px;
         transform: translateY(-50%);
+    }
+}
+
+.apos-field--small {
+    .apos-input-wrapper {
+        display: flex;
+        column-gap: 6px;
+
+        .apos-input__button-wrapper {
+            position: relative;
+            transform: none;
+            top: 0;
+            right: 0;
+        }
     }
 }
 </style>

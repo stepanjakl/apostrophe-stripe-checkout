@@ -1,0 +1,9 @@
+.apos-table__cell-field {
+    &.apos-table__cell-field--amount_total, &.apos-table__cell-field--line_items_quantity_total {
+        font-weight: bold;
+    }
+
+    &.apos-table__cell-field--currency {
+        text-transform: uppercase;
+    }
+}

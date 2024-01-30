@@ -7,6 +7,8 @@ const stripe = Stripe(process.env.STRIPE_KEY)
 // Use body-parser to retrieve the raw body as a buffer
 const bodyParser = require('body-parser')
 
+const stripeWebhookEnpoint = '/api/v1/stripe/checkout/webhook'
+
 module.exports = {
     options: {
         alias: 'stripeCheckout',
@@ -14,7 +16,7 @@ module.exports = {
             ns: 'stripeCheckout',
             browser: true
         },
-        csrfExceptions: ['/api/v1/stripe/checkout/webhook']
+        csrfExceptions: [stripeWebhookEnpoint]
     },
     bundle: {
         directory: 'modules',
@@ -48,29 +50,13 @@ module.exports = {
 
         console.log('-- --- stripeCheckout - adminBar:', self.apos.adminBar.groups)
 
-        self.apos.app.use('/api/v1/stripe/checkout/webhook', bodyParser.raw({ type: '*/*' }))
-        // self.apos.app.use(bodyParser.json({ type: 'application/json' }))
+        self.apos.app.use(stripeWebhookEnpoint, bodyParser.raw({ type: '*/*' }))
     },
-    /* middleware(self, options) {
-        return {
-            bodyParserRaw(req, res, next) {
-                console.log('-- -- Middleware -- Stripe Checkout - bodyParserRaw')
-                // Returns middleware that parses all bodies as a Buffer and only looks at requests where the Content-Type header matches the type option.
-
-                return next()
-            }
-        }
-    }, */
     routes(self) {
         return {
             post: {
                 // POST /api/v1/stripe/checkout/webhook
-                '/api/v1/stripe/checkout/webhook': async function (req, res, options) {
-
-                    // self.apos.app.use(bodyParser.raw({ type: 'application/json' }))
-
-                    // self.apos.express.raw({ type: 'application/json' })
-
+                [stripeWebhookEnpoint]: async function (req, res, options) {
                     console.log('-- -- API -- Stripe Checkout - Webhook')
                     console.log('-- -- API -- Stripe Checkout - Webhook - options:', options)
                     console.log('-- -- API -- Stripe Checkout - Webhook - req.body:', req.body)
@@ -95,23 +81,34 @@ module.exports = {
                                 expand: ['line_items'],
                             }
                         )
-
-                        // const lineItems = checkoutSessionWithLineItems.line_items
-
+                        console.log('-- -- API -- Stripe Checkout - Webhook - checkoutSessionWithLineItems:', checkoutSessionWithLineItems)
 
                         let checkoutSessionInstance = self.apos.stripeCheckoutSession.newInstance()
-                        // checkoutSessionInstance._id = checkoutSessionWithLineItems.id
-                        checkoutSessionInstance.title = checkoutSessionWithLineItems.id
-                        checkoutSessionInstance.slug = checkoutSessionWithLineItems.id
-                        checkoutSessionInstance.status = checkoutSessionWithLineItems.status
-                        checkoutSessionInstance.checkoutSessionData = JSON.stringify(checkoutSessionWithLineItems)
-
                         console.log('-- -- API -- Stripe Checkout - Webhook - checkoutSessionInstance:', checkoutSessionInstance)
 
-                        // console.log('-- -- API -- Stripe Checkout - Webhook - self.apos.task.getAdminReq:', self.apos.task.getAdminReq())
+                        checkoutSessionInstance.slug = checkoutSessionWithLineItems.id
+                        checkoutSessionInstance.created_timestamp = new Date(checkoutSessionWithLineItems.created * 1000).toISOString()
+                        checkoutSessionInstance.amount_subtotal = (checkoutSessionWithLineItems.amount_subtotal / 100)
+                        checkoutSessionInstance.amount_total = (checkoutSessionWithLineItems.amount_total / 100)
+                        checkoutSessionInstance.currency = checkoutSessionWithLineItems.currency
+                        checkoutSessionInstance.line_items_quantity_total = checkoutSessionWithLineItems.line_items.data.reduce((sum, item) => sum + item.quantity, 0)
+                        checkoutSessionInstance.checkoutSession = {
+                            payment_intent: checkoutSessionWithLineItems.payment_intent,
+                            status: checkoutSessionWithLineItems.status,
+                            payment_status: checkoutSessionWithLineItems.payment_status,
+                            line_items: checkoutSessionWithLineItems.line_items.data.map(item => ({
+                                description: item.description,
+                                product: item.price.product,
+                                type: item.price.type,
+                                quantity: item.quantity,
+                                unit_amount: (item.price.unit_amount / 100)
+                            }))
+                        }
+
+                        checkoutSessionInstance.checkoutSessionData = JSON.stringify(checkoutSessionWithLineItems)
+                        console.log('-- -- API -- Stripe Checkout - Webhook - checkoutSessionInstance:', checkoutSessionInstance)
 
                         await self.apos.stripeCheckoutSession.insert(req, checkoutSessionInstance, { permissions: false })
-
 
                     }
 
@@ -122,12 +119,6 @@ module.exports = {
     },
     apiRoutes(self) {
         return {
-            get: {
-                // GET /api/v1/stripe-checkout/test
-                async test(req) {
-                    return 'test'
-                }
-            },
             post: {
                 // POST /api/v1/stripe/checkout/sessions
                 '/api/v1/stripe/checkout/sessions': async function (req, options) {
@@ -139,11 +130,15 @@ module.exports = {
                     const checkoutSession = await stripe.checkout.sessions.create({
                         line_items: [
                             {
-                                // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                                price: 'price_1ObRtCE1ozL6C4r7ChMax4uI',
-                                quantity: 1,
+                                price: 'price_1OeIu3E1ozL6C4r7Aiwn3adJ',
+                                quantity: 1
                             },
+                            {
+                                price: 'price_1OeIm2E1ozL6C4r7o2wTmhDQ',
+                                quantity: 1
+                            }
                         ],
+                        locale: 'en',
                         mode: 'payment',
                         success_url: `https://stepanjakl.com`,
                         cancel_url: `https://stepanjakl.com`,

@@ -6,20 +6,17 @@ module.exports = {
         pluralLabel: 'Checkout Sessions',
         quickCreate: false,
         searchable: false,
-        autopublish: true,
+        // autopublish: true,
         showCreate: false,
         editRole: 'editor',
         publishRole: 'editor',
         showPermissions: true,
-        /* publicApiProjection: {
-            title: 1,
-            slug: 1,
-            type: 1,
-            _url: 1,
-            visiblity: 1,
-            archived: 1,
-            checkoutSessionData: 1
-        } */
+        sort: {
+            created_timestamp: -1
+        }
+    },
+    batchOperations: {
+        remove: ['publish']
     },
     /* utilityOperations: {
         add: {
@@ -33,62 +30,136 @@ module.exports = {
     }, */
     columns: {
         add: {
-            slug: {
-                label: 'Slug',
+            'checkoutSession.payment_intent': {
+                label: 'Payment ID',
                 component: 'AposCellBasic'
             },
-            status: {
+            'created_timestamp': {
+                label: 'Date',
+                component: 'AposCellDate'
+            },
+            'amount_total': {
+                label: 'Amount',
+                component: 'AposCellBasic'
+            },
+            'currency': {
+                label: 'Currency',
+                component: 'AposCellBasic'
+            },
+            'line_items_quantity_total': {
+                label: 'Quantity',
+                component: 'AposCellBasic'
+            },
+            'checkoutSession.status': {
                 label: 'Status',
                 component: 'AposCellBasic'
             },
-            lastPublishedAt: {
-                label: 'Published',
-                component: 'AposCellDate'
+            'checkoutSession.payment_status': {
+                label: 'Payment status',
+                component: 'AposCellBasic'
             }
         },
-        remove: ['title'],
-        order: ['slug', 'status', 'lastPublishedAt']
+        remove: ['title', 'lastPublishedAt', 'updatedAt'],
+        order: ['checkoutSession.payment_intent', 'created_timestamp', 'amount_total', 'currency', 'line_items_quantity_total', 'checkoutSession.status', 'checkoutSession.payment_status']
     },
     fields: {
         add: {
             slug: {
                 type: 'readOnly',
-                label: 'Slug',
-                required: true,
-                readOnly: true,
-                copyToClipboard: true,
-                openInNewTab: true,
-                openInNewTabPrepend: 'https://dashboard.stripe.com/test/payments/' // remove
+                label: 'Checkout session ID',
+                copyToClipboard: true
+            },
+            created_timestamp: {
+                type: 'readOnly',
+                label: 'Created timestamp',
+                copyToClipboard: true
             },
             checkoutSession: {
-                label: 'Checkout Session',
+                label: 'Checkout session data',
                 type: 'object',
                 fields: {
                     add: {
                         payment_intent: {
                             type: 'readOnly',
-                            label: 'Payment Intent',
-                            required: true,
-                            readOnly: true,
+                            label: 'Payment intent ID',
                             copyToClipboard: true,
                             openInNewTab: true,
-                            openInNewTabPrepend: 'https://dashboard.stripe.com/test/payments/'
+                            openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}/test/payments/`
                         },
                         status: {
-                            type: 'string',
-                            label: 'Status',
-                            readOnly: true
+                            type: 'readOnly',
+                            label: 'Status'
                         },
-
-
-                        /* checkoutSessionData: {
-                            type: 'string',
-                            textarea: true,
-                            label: 'Checkout Session data'
-                        }, */
+                        payment_status: {
+                            type: 'readOnly',
+                            label: 'Payment status'
+                        },
+                        line_items: {
+                            label: 'Line items',
+                            type: 'array',
+                            inline: true,
+                            style: 'table',
+                            readOnly: true,
+                            fields: {
+                                add: {
+                                    /* _id: {
+                                        type: 'readOnly',
+                                        label: 'ID'
+                                    }, */
+                                    description: {
+                                        type: 'readOnly',
+                                        label: 'Description'
+                                    },
+                                    product: {
+                                        type: 'readOnly',
+                                        label: 'Product ID',
+                                        copyToClipboard: true,
+                                        openInNewTab: true,
+                                        openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}/test/products/`
+                                    },
+                                    type: {
+                                        type: 'readOnly',
+                                        label: 'Type'
+                                    },
+                                    quantity: {
+                                        type: 'readOnly',
+                                        label: 'Quantity'
+                                    },
+                                    unit_amount: {
+                                        type: 'readOnly',
+                                        label: 'Unit amount'
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-            }
+            },
+
+
+            amount_subtotal: {
+                type: 'readOnly',
+                label: 'Amount subtotal'
+            },
+            amount_total: {
+                type: 'readOnly',
+                label: 'Amount total'
+            },
+            currency: {
+                type: 'readOnly',
+                label: 'Currency'
+            },
+            line_items_quantity_total: {
+                type: 'readOnly',
+                label: 'Line items total quantity'
+            },
+
+
+            checkoutSessionData: {
+                type: 'string',
+                textarea: true,
+                label: 'Checkout session data'
+            },
         },
         remove: ['title', 'visibility'],
         group: {
@@ -96,7 +167,22 @@ module.exports = {
                 label: 'Data',
                 fields: [
                     'slug',
+                    'created_timestamp',
                     'checkoutSession'
+                ]
+            },
+            debug: {
+                label: 'Debug',
+                fields: [
+                    'checkoutSessionData'
+                ]
+            },
+            utility: {
+                fields: [
+                    'amount_subtotal',
+                    'amount_total',
+                    'currency',
+                    'line_items_quantity_total'
                 ]
             }
         }
