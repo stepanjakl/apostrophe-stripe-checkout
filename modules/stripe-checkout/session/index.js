@@ -6,11 +6,8 @@ module.exports = {
         pluralLabel: 'Checkout Sessions',
         quickCreate: false,
         searchable: false,
-        // autopublish: true,
         showCreate: false,
-        editRole: 'editor',
-        publishRole: 'editor',
-        showPermissions: true,
+        // autopublish: true,
         sort: {
             created_timestamp: -1
         }

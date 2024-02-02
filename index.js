@@ -23,14 +23,8 @@ module.exports = {
         modules: getBundleModuleNames()
     },
     init(self) {
-        console.log('-- -- stripeCheckout init')
-        // self.apos.adminBar.add()
-        console.log('-- --- stripeCheckout - adminBar:', self.apos.adminBar.groups)
         const groupName = 'stripe'
-        const itemsToAdd = [
-            'stripe-checkout/session',
-            'stripe/payment-intent'
-        ]
+        const itemsToAdd = ['stripe-checkout/session']
 
         // Check if 'stripe' already exists in self.apos.adminBar.groups
         const existingStripeGroup = self.apos.adminBar.groups.find(group => group.name === groupName)
@@ -47,8 +41,6 @@ module.exports = {
         } else {
             self.apos.adminBar.groups.push(newStripeGroup)
         }
-
-        console.log('-- --- stripeCheckout - adminBar:', self.apos.adminBar.groups)
 
         self.apos.app.use(stripeWebhookEnpoint, bodyParser.raw({ type: '*/*' }))
     },
@@ -149,22 +141,13 @@ module.exports = {
 
 
                     return req.res.redirect(303, checkoutSession.url)
-
-                    // return 'Stripe Checkout - Create Session'
                 }
             }
         }
     }
 }
 
-/* function getBundleModuleNames() {
-    const source = path.join(__dirname, './modules/stripe-checkout')
-    console.log('-- -- source:', source)
-    return fs
-        .readdirSync(source, { withFileTypes: true })
-        .filter(dirent => dirent.isDirectory())
-        .map(dirent => `stripe-checkout/${dirent.name}`)
-} */
+// console.log('-- getBundleModuleNames', getBundleModuleNames());
 
 function getBundleModuleNames() {
     return fs.readdirSync(path.resolve(__dirname, 'modules')).reduce((result, dir) => {
@@ -179,5 +162,3 @@ function getBundleModuleNames() {
         return result
     }, [])
 }
-
-console.log('-- -- getBundleModuleNames:', getBundleModuleNames())
