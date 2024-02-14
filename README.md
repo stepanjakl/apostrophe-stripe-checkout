@@ -34,7 +34,10 @@ npm install stripe-checkout@npm:@stepanjakl/apostrophe-stripe-checkout
 - HMTX/Alpine.js examples - clean design (one mostly rounded - one view with rounded body edges)
 - Screenshot with Apostrophe Pro subscription (show upsell value)
 - Manual how to set it up with Stripe
+- write tests?
 - `stripe listen --forward-to localhost:5000/api/v1/stripe/checkout/webhook`
+
+since the stripe objects are saved within the piece type they can be easily associated with other piece through relationships. So you can fairly easily, with few modifications to your existing codebase, plug in this package and use it.
 
 ## Subtitle
 

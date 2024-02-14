@@ -81,7 +81,7 @@ module.exports = {
                             label: 'Payment intent ID',
                             copyToClipboard: true,
                             openInNewTab: true,
-                            openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}/test/payments/`
+                            openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST ? '/test' : ''}/payments/`
                         },
                         status: {
                             type: 'readOnly',
@@ -112,7 +112,7 @@ module.exports = {
                                         label: 'Product ID',
                                         copyToClipboard: true,
                                         openInNewTab: true,
-                                        openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}/test/products/`
+                                        openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST ? '/test' : ''}/products/`
                                     },
                                     type: {
                                         type: 'readOnly',
@@ -187,7 +187,7 @@ module.exports = {
     filters: {
         remove: ['visibility']
     },
-    init(self) {
+    /* init(self) {
         self.addReadOnlyFieldType()
     },
     methods(self) {
@@ -200,5 +200,5 @@ module.exports = {
                 })
             }
         }
-    }
+    } */
 }

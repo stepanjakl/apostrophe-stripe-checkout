@@ -22,14 +22,14 @@
                                 :disableFocus="false"
                                 @click="copyToClipboard()"
                                 v-apos-tooltip="{
-                                    content: copied ? 'stripeCheckout:contentCopied' : 'stripeCheckout:copyToClipboard',
+                                    content: copied ? 'readOnlyField:contentCopied' : 'readOnlyField:copyToClipboard',
                                     placement: 'bottom',
                                     offset: '3',
                                     trigger: 'hover',
                                     hideOnTargetClick: false
                                 }">
                         <template v-slot:label>
-                            <span class="apos-button__label apos-sr-only"> {{ $t('stripeCheckout:copyToClipboard') }} </span>
+                            <span class="apos-button__label apos-sr-only"> {{ $t('readOnlyField:copyToClipboard') }} </span>
                             <ContentCopyIcon class="apos-check"
                                              :size="12" />
                         </template>
@@ -41,14 +41,14 @@
                                 :disableFocus="false"
                                 @click="openInNewTab()"
                                 v-apos-tooltip="{
-                                    content: 'stripeCheckout:openInNewTab',
+                                    content: 'readOnlyField:openInNewTab',
                                     placement: 'bottom',
                                     offset: '3',
                                     trigger: 'hover',
                                     hideOnTargetClick: false
                                 }">
                         <template v-slot:label>
-                            <span class="apos-button__label apos-sr-only"> {{ $t('stripeCheckout:openInNewTab') }} </span>
+                            <span class="apos-button__label apos-sr-only"> {{ $t('readOnlyField:openInNewTab') }} </span>
                             <OpenInNewIcon :size="12" />
                         </template>
                     </AposButton>
@@ -88,6 +88,9 @@ export default {
         this.$el.querySelector('.apos-input__button')?.addEventListener('focusout', this.focusOut)
     },
     methods: {
+        validateAndEmit () {
+            // overwrite as there's no need for the inherited validation method
+        },
         copyToClipboard() {
             navigator.clipboard.writeText(this.next)
             this.copied = true
