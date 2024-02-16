@@ -53,7 +53,6 @@ module.exports = {
                     console.log('-- -- API -- Stripe Checkout - Webhook - options:', options)
                     console.log('-- -- API -- Stripe Checkout - Webhook - req.body:', req.body)
                     console.log('-- -- API -- Stripe Checkout - Webhook - req.headers:', req.headers)
-                    console.log('-- -- API -- Stripe Checkout - Webhook - req.get(stripe-signature):', req.get('stripe-signature'))
 
                     let event
 
@@ -65,45 +64,43 @@ module.exports = {
 
                     if (event.type === 'checkout.session.completed') {
 
-                        console.log('-- -- API -- Stripe Checkout - Webhook - event.type === checkout.session.completed:', event)
 
-                        const checkoutSessionWithLineItems = await stripe.checkout.sessions.retrieve(
+                        const checkoutSession = await stripe.checkout.sessions.retrieve(
                             event.data.object.id,
-                            {
+                            /* {
                                 expand: ['line_items'],
-                            }
+                            } */
                         )
-                        console.log('-- -- API -- Stripe Checkout - Webhook - checkoutSessionWithLineItems:', checkoutSessionWithLineItems)
 
                         let checkoutSessionInstance = self.apos.stripeCheckoutSession.newInstance()
-                        console.log('-- -- API -- Stripe Checkout - Webhook - checkoutSessionInstance:', checkoutSessionInstance)
 
-                        checkoutSessionInstance.slug = checkoutSessionWithLineItems.id
-                        checkoutSessionInstance.created_timestamp = new Date(checkoutSessionWithLineItems.created * 1000).toISOString()
-                        checkoutSessionInstance.amount_subtotal = (checkoutSessionWithLineItems.amount_subtotal / 100)
-                        checkoutSessionInstance.amount_total = (checkoutSessionWithLineItems.amount_total / 100)
-                        checkoutSessionInstance.currency = checkoutSessionWithLineItems.currency
-                        checkoutSessionInstance.line_items_quantity_total = checkoutSessionWithLineItems.line_items.data.reduce((sum, item) => sum + item.quantity, 0)
-                        checkoutSessionInstance.checkoutSession = {
-                            payment_intent: checkoutSessionWithLineItems.payment_intent,
-                            status: checkoutSessionWithLineItems.status,
-                            payment_status: checkoutSessionWithLineItems.payment_status,
-                            line_items: checkoutSessionWithLineItems.line_items.data.map(item => ({
-                                description: item.description,
-                                product: item.price.product,
-                                type: item.price.type,
-                                quantity: item.quantity,
-                                unit_amount: (item.price.unit_amount / 100)
-                            }))
-                        }
+                        checkoutSessionInstance.slug = checkoutSession.id
 
-                        checkoutSessionInstance.checkoutSessionData = JSON.stringify(checkoutSessionWithLineItems)
-                        console.log('-- -- API -- Stripe Checkout - Webhook - checkoutSessionInstance:', checkoutSessionInstance)
+                        checkoutSessionInstance.stripeCheckoutSessionObject = checkoutSession
+                        checkoutSessionInstance.stripeCheckoutSessionObject.created_timestamp = new Date(checkoutSession.created * 1000).toISOString()
+                        checkoutSessionInstance.stripeCheckoutSessionObject.amount_subtotal = (checkoutSession.amount_subtotal / 100).toFixed(2)
+                        checkoutSessionInstance.stripeCheckoutSessionObject.amount_total = (checkoutSession.amount_total / 100).toFixed(2)
+
+
+                        const lineItems = await stripe.checkout.sessions.listLineItems(
+                            event.data.object.id,
+                            {
+                                limit: 99,
+                            }
+                        )
+                        checkoutSessionInstance.stripeCheckoutSessionObject.line_items_quantity_total = lineItems.data.reduce((sum, item) => sum + item.quantity, 0)
+
+                        lineItems.data.forEach(item => {
+                            ['amount_total', 'amount_subtotal', 'amount_discount', 'amount_tax'].forEach(field => {
+                                item[field] = (item[field] / 100).toFixed(2)
+                            })
+                            item.price.unit_amount = (item.price.unit_amount / 100).toFixed(2)
+                        })
+
+                        checkoutSessionInstance.stripeCheckoutSessionLineItemsObject = lineItems
 
                         await self.apos.stripeCheckoutSession.insert(req, checkoutSessionInstance, { permissions: false })
-
                     }
-
                     return res.status(200).end()
                 }
             }
@@ -117,7 +114,6 @@ module.exports = {
                     console.log('-- -- API -- Stripe Checkout - Create Session')
                     console.log('-- -- API -- Stripe Checkout - Create Session - options:', options)
                     console.log('-- -- API -- Stripe Checkout - Create Session - req.body:', req.body)
-                    console.log('-- -- API -- Stripe Checkout - Create Session - STRIPE_KEY:', process.env.STRIPE_KEY)
 
                     const checkoutSession = await stripe.checkout.sessions.create({
                         line_items: [
@@ -138,16 +134,12 @@ module.exports = {
 
                     console.log('-- -- API -- Stripe Checkout - Create Session - session.url:', checkoutSession.url)
 
-
-
                     return req.res.redirect(303, checkoutSession.url)
                 }
             }
         }
     }
 }
-
-// console.log('-- getBundleModuleNames', getBundleModuleNames());
 
 function getBundleModuleNames() {
     return fs.readdirSync(path.resolve(__dirname, 'modules')).reduce((result, dir) => {

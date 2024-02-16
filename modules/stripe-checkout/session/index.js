@@ -7,27 +7,17 @@ module.exports = {
         quickCreate: false,
         searchable: false,
         showCreate: false,
-        // autopublish: true,
+        autopublish: false,
         sort: {
-            created_timestamp: -1
+            'stripeCheckoutSessionObject.created_timestamp': -1
         }
     },
     batchOperations: {
         remove: ['publish']
     },
-    /* utilityOperations: {
-        add: {
-            button: {
-                label: 'apostrophe:moreOperations',
-                iconOnly: true,
-                icon: 'dots-vertical-icon',
-                type: 'outline'
-            },
-        }
-    }, */
     columns: {
         add: {
-            'checkoutSession.payment_intent': {
+            'stripeCheckoutSessionObject.payment_intent': {
                 label: 'Payment ID',
                 component: 'AposCellBasic'
             },
@@ -47,7 +37,7 @@ module.exports = {
                 label: 'Quantity',
                 component: 'AposCellBasic'
             },
-            'checkoutSession.status': {
+            'stripeCheckoutSessionObject.status': {
                 label: 'Status',
                 component: 'AposCellBasic'
             },
@@ -61,12 +51,115 @@ module.exports = {
     },
     fields: {
         add: {
-            slug: {
+            /* slug: {
                 type: 'readOnly',
                 label: 'Checkout session ID',
                 copyToClipboard: true
+            }, */
+            stripeCheckoutSessionObject: {
+                label: 'Stripe checkout session object',
+                type: 'object',
+                fields: {
+                    add: {
+                        id: {
+                            type: 'readOnly',
+                            label: 'Checkout session ID',
+                            copyToClipboard: true
+                        },
+                        payment_intent: {
+                            type: 'readOnly',
+                            label: 'Payment intent ID',
+                            copyToClipboard: true,
+                            openInNewTab: true,
+                            openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST_MODE ? '/test' : ''}/payments/`
+                        },
+                        amount_subtotal: {
+                            type: 'readOnly',
+                            label: 'Amount subtotal'
+                        },
+                        amount_total: {
+                            type: 'readOnly',
+                            label: 'Amount total'
+                        },
+                        currency: {
+                            type: 'readOnly',
+                            label: 'Currency'
+                        },
+                        line_items_quantity_total: {
+                            type: 'readOnly',
+                            label: 'Line items total quantity'
+                        }
+                    }
+                }
             },
-            created_timestamp: {
+
+            stripeCheckoutSessionLineItemsObject: {
+                label: 'Stripe checkout session line items object',
+                type: 'object',
+                fields: {
+                    add: {
+                        data: {
+                            label: 'Line items',
+                            type: 'array',
+                            inline: true,
+                            // style: 'table',
+                            readOnly: true,
+                            fields: {
+                                add: {
+                                    // _id: {
+                                    //     type: 'readOnly',
+                                    //     label: 'ID'
+                                    // },
+                                    id: {
+                                        type: 'readOnly',
+                                        label: 'Product ID',
+                                        copyToClipboard: true,
+                                        openInNewTab: true,
+                                        openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST_MODE ? '/test' : ''}/products/`
+                                    },
+                                    description: {
+                                        type: 'readOnly',
+                                        label: 'Name'
+                                    },
+                                    object: {
+                                        type: 'readOnly',
+                                        label: 'Type'
+                                    },
+                                    quantity: {
+                                        type: 'readOnly',
+                                        label: 'Quantity'
+                                    },
+                                    price: {
+                                        label: 'Price',
+                                        type: 'object',
+                                        fields: {
+                                            add: {
+                                                unit_amount: {
+                                                    type: 'readOnly',
+                                                    label: 'Unit amount'
+                                                },
+                                                currency: {
+                                                    type: 'readOnly',
+                                                    label: 'Currency'
+                                                }
+                                            }
+                                        }
+                                    },
+                                    amount_total: {
+                                        type: 'readOnly',
+                                        label: 'Amount total'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+
+            /* created_timestamp: {
                 type: 'readOnly',
                 label: 'Created timestamp',
                 copyToClipboard: true
@@ -81,7 +174,7 @@ module.exports = {
                             label: 'Payment intent ID',
                             copyToClipboard: true,
                             openInNewTab: true,
-                            openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST ? '/test' : ''}/payments/`
+                            openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST_MODE ? '/test' : ''}/payments/`
                         },
                         status: {
                             type: 'readOnly',
@@ -91,7 +184,7 @@ module.exports = {
                             type: 'readOnly',
                             label: 'Payment status'
                         },
-                        line_items: {
+                        'line_items.data': {
                             label: 'Line items',
                             type: 'array',
                             inline: true,
@@ -99,10 +192,10 @@ module.exports = {
                             readOnly: true,
                             fields: {
                                 add: {
-                                    /* _id: {
-                                        type: 'readOnly',
-                                        label: 'ID'
-                                    }, */
+                                    // _id: {
+                                    //     type: 'readOnly',
+                                    //     label: 'ID'
+                                    // },
                                     description: {
                                         type: 'readOnly',
                                         label: 'Description'
@@ -112,7 +205,7 @@ module.exports = {
                                         label: 'Product ID',
                                         copyToClipboard: true,
                                         openInNewTab: true,
-                                        openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST ? '/test' : ''}/products/`
+                                        openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST_MODE ? '/test' : ''}/products/`
                                     },
                                     type: {
                                         type: 'readOnly',
@@ -131,57 +224,35 @@ module.exports = {
                         }
                     }
                 }
-            },
+            }, */
 
 
-            amount_subtotal: {
-                type: 'readOnly',
-                label: 'Amount subtotal'
-            },
-            amount_total: {
-                type: 'readOnly',
-                label: 'Amount total'
-            },
-            currency: {
-                type: 'readOnly',
-                label: 'Currency'
-            },
-            line_items_quantity_total: {
-                type: 'readOnly',
-                label: 'Line items total quantity'
-            },
 
 
-            checkoutSessionData: {
-                type: 'string',
-                textarea: true,
-                label: 'Checkout session data'
-            },
         },
-        remove: ['title', 'visibility'],
+        remove: ['title', 'slug', 'visibility'],
         group: {
-            data: {
-                label: 'Data',
+            session: {
+                label: 'Session',
                 fields: [
                     'slug',
-                    'created_timestamp',
-                    'checkoutSession'
+                    'stripeCheckoutSessionObject'
                 ]
             },
-            debug: {
-                label: 'Debug',
+            lineItems: {
+                label: 'Line items',
                 fields: [
-                    'checkoutSessionData'
+                    'stripeCheckoutSessionLineItemsObject'
                 ]
             },
-            utility: {
+            /* utility: {
                 fields: [
                     'amount_subtotal',
                     'amount_total',
                     'currency',
                     'line_items_quantity_total'
                 ]
-            }
+            } */
         }
     },
     filters: {

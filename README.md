@@ -31,7 +31,7 @@ npm install stripe-checkout@npm:@stepanjakl/apostrophe-stripe-checkout
 - webhook to save completed payments in Apostrophe pieces
 - Option for one-time payments & Recurring payments
 - Styling + extra options
-- HMTX/Alpine.js examples - clean design (one mostly rounded - one view with rounded body edges)
+- HMTX/Alpine.js examples - clean design (one mostly rounded - one view with rounded body edges) - another sharper and clean with lines
 - Screenshot with Apostrophe Pro subscription (show upsell value)
 - Manual how to set it up with Stripe
 - write tests?
