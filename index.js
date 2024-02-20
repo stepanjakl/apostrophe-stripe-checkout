@@ -64,7 +64,6 @@ module.exports = {
 
                     if (event.type === 'checkout.session.completed') {
 
-
                         const checkoutSession = await stripe.checkout.sessions.retrieve(
                             event.data.object.id,
                             /* {
@@ -80,7 +79,6 @@ module.exports = {
                         checkoutSessionInstance.stripeCheckoutSessionObject.created_timestamp = new Date(checkoutSession.created * 1000).toISOString()
                         checkoutSessionInstance.stripeCheckoutSessionObject.amount_subtotal = (checkoutSession.amount_subtotal / 100).toFixed(2)
                         checkoutSessionInstance.stripeCheckoutSessionObject.amount_total = (checkoutSession.amount_total / 100).toFixed(2)
-
 
                         const lineItems = await stripe.checkout.sessions.listLineItems(
                             event.data.object.id,

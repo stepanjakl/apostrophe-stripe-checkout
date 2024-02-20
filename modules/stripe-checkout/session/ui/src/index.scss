@@ -1,15 +1,15 @@
 .apos-table__cell-field {
-    &.apos-table__cell-field--amount_total,
-    &.apos-table__cell-field--line_items_quantity_total {
+    &.apos-table__cell-field--stripeCheckoutSessionObject\.amount_total,
+    &.apos-table__cell-field--stripeCheckoutSessionObject\.line_items_quantity_total {
         font-weight: bold;
     }
 
-    &.apos-table__cell-field--currency {
+    &.apos-table__cell-field--stripeCheckoutSessionObject\.currency {
         text-transform: uppercase;
     }
 
-    &.apos-table__cell-field--checkoutSession\.status,
-    &.apos-table__cell-field--checkoutSession\.payment_status {
+    &.apos-table__cell-field--stripeCheckoutSessionObject\.status,
+    &.apos-table__cell-field--stripeCheckoutSessionObject\.payment_status {
         display: inline-block;
         padding: 5px;
         border: 1px solid var(--a-base-8);

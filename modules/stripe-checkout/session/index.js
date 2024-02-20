@@ -21,19 +21,19 @@ module.exports = {
                 label: 'Payment ID',
                 component: 'AposCellBasic'
             },
-            'created_timestamp': {
+            'stripeCheckoutSessionObject.created_timestamp': {
                 label: 'Date',
                 component: 'AposCellDate'
             },
-            'amount_total': {
+            'stripeCheckoutSessionObject.amount_total': {
                 label: 'Amount',
                 component: 'AposCellBasic'
             },
-            'currency': {
+            'stripeCheckoutSessionObject.currency': {
                 label: 'Currency',
                 component: 'AposCellBasic'
             },
-            'line_items_quantity_total': {
+            'stripeCheckoutSessionObject.line_items_quantity_total': {
                 label: 'Quantity',
                 component: 'AposCellBasic'
             },
@@ -41,13 +41,13 @@ module.exports = {
                 label: 'Status',
                 component: 'AposCellBasic'
             },
-            'checkoutSession.payment_status': {
+            'stripeCheckoutSessionObject.payment_status': {
                 label: 'Payment status',
                 component: 'AposCellBasic'
             }
         },
         remove: ['title', 'lastPublishedAt', 'updatedAt'],
-        order: ['checkoutSession.payment_intent', 'created_timestamp', 'amount_total', 'currency', 'line_items_quantity_total', 'checkoutSession.status', 'checkoutSession.payment_status']
+        order: ['checkoutSession.payment_intent', 'stripeCheckoutSessionObject.created_timestamp', 'stripeCheckoutSessionObject.amount_total', 'stripeCheckoutSessionObject.currency', 'stripeCheckoutSessionObject.line_items_quantity_total', 'stripeCheckoutSessionObject.status', 'stripeCheckoutSessionObject.payment_status']
     },
     fields: {
         add: {
