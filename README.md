@@ -1,13 +1,13 @@
 <div align="center">
     <h1>
-        Stripe Checkout For Apostrophe 3
+        Stripe Checkout For Apostrophe 3/4
     </h1>
     <p>
         <a aria-label="Apostrophe logo" href="https://v3.docs.apostrophecms.org">
-            <img src="https://img.shields.io/badge/MADE%20FOR%20Apostrophe%203-000000.svg?style=for-the-badge&logo=Apostrophe&labelColor=6516dd">
+            <img src="https://img.shields.io/badge/MADE%20FOR%20APOSTROPHE%203/4-000000.svg?style=for-the-badge&logo=Apostrophe&labelColor=6516dd">
         </a>
         <a aria-label="Personal logo" href="https://stepanjakl.com">
-            <img src="https://img.shields.io/badge/Open%20To%20New%20Opportunities-000000.svg?style=for-the-badge&labelColor=EED500&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+PHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTAgMTV2NWgyMFY3LjVIMHY1aDE1LjA1VjE1SDBaTTIwIDBIMHY1aDIwVjBaIiAvPjwvc3ZnPg==">
+            <img src="https://img.shields.io/badge/STEPANJAKL.COM%20-000000.svg?style=for-the-badge&labelColor=EED500&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+PHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTAgMTV2NWgyMFY3LjVIMHY1aDE1LjA1VjE1SDBaTTIwIDBIMHY1aDIwVjBaIiAvPjwvc3ZnPg==">
         </a>
         <a aria-label="License"
            href="https://github.com/apostrophecms/module-template/blob/main/LICENSE.md">
@@ -28,10 +28,8 @@ npm install stripe-checkout@npm:@stepanjakl/apostrophe-stripe-checkout
 ```
 
 ## TODO
-- webhook to save completed payments in Apostrophe pieces
 - Option for one-time payments & Recurring payments
 - Styling + extra options
-- HMTX/Alpine.js examples - clean design (one mostly rounded - one view with rounded body edges) - another sharper and clean with lines
 - Screenshot with Apostrophe Pro subscription (show upsell value)
 - Manual how to set it up with Stripe
 - write tests?
