@@ -18,7 +18,7 @@ if (process.env.STRIPE_TEST_MODE === 'false') {
 
 const bodyParser = require('body-parser'); // Importing the body-parser middleware
 
-const stripeWebhookEnpoint = '/api/v1/stripe/checkout/webhook'; // Defining the endpoint for the Stripe webhook
+const stripeWebhookEndpoint = '/api/v1/stripe/checkout/webhook'; // Defining the endpoint for the Stripe webhook
 
 module.exports = {
   options: {
@@ -27,7 +27,7 @@ module.exports = {
       ns: 'stripeCheckout',
       browser: true
     },
-    csrfExceptions: [ stripeWebhookEnpoint ]
+    csrfExceptions: [ stripeWebhookEndpoint ]
   },
   bundle: {
     directory: 'modules',
@@ -56,16 +56,25 @@ module.exports = {
     }
 
     // Using body-parser middleware for the webhook endpoint
-    self.apos.app.use(stripeWebhookEnpoint, bodyParser.raw({ type: '*/*' }));
+    self.apos.app.use(stripeWebhookEndpoint, bodyParser.raw({ type: '*/*' }));
   },
   routes(self) {
     return {
       post: {
         // Handler for POST requests to the webhook endpoint
-        [stripeWebhookEnpoint]: async function (req, res) {
-          /* console.log('-- -- API -- Stripe Checkout - Webhook');
+        [stripeWebhookEndpoint]: async function (req, res, next) {
+          console.log('-- -- process.env.STRIPE_TEST_MODE:', process.env.STRIPE_TEST_MODE);
           console.log('-- -- API -- Stripe Checkout - Webhook - req.body:', Buffer.from(req.body, 'base64').toString('ascii'));
-          console.log('-- -- API -- Stripe Checkout - Webhook - req.headers:', req.headers); */
+          console.log('-- -- API -- Stripe Checkout - Webhook - req.headers:', req.headers);
+
+          if (!req.headers['stripe-signature']) {
+            if (process.env.STRIPE_TEST_MODE === 'false') {
+              throw self.apos.error('invalid', 'Stripe signature was not provided in the header.');
+            } else {
+              res.status(500);
+              res.send('Stripe signature was not provided in the header.');
+            }
+          }
 
           let event;
 

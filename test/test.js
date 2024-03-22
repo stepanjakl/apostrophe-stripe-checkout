@@ -2,6 +2,7 @@ const assert = require('assert');
 const t = require('apostrophe/test-lib/test');
 
 process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET = 'whsec_xyz';
+process.env.STRIPE_TEST_MODE = 'true';
 
 describe('Apostrophe - Stripe Checkout Integration Tests', function () {
   let apos;
@@ -78,23 +79,20 @@ describe('Apostrophe - Stripe Checkout Integration Tests', function () {
     assert.strictEqual(isURL(response), true);
   });
 
-  it('should send request to webhook endpoint and save the completed checkout session to database', async function () {
-    let response;
+  it('should send request to webhook endpoint and save the completed checkout session to the database', async function () {
 
-    try {
-      await apos.http.post('/api/v1/stripe/checkout/webhook', {
-        headers: {
-          'stripe-signature': 't=1711059559,v1=9dd216ac7ffc2d07d3edd4b4de4a67200705c52f435e92bc3b21a605f3af91af,v0=4251a0f2bbd73dd1622bb01aedb334cab148be2a84bb3b1daea4af931e0172e2'
-        },
-        body: {
-          id: 'evt_xyz',
-          object: 'event'
-        }
-      });
-    } catch (error) {
+    await apos.http.post('/api/v1/stripe/checkout/webhook', {
+      headers: {
+        'stripe-signature': 't=1711059559,v1=9dd216ac7ffc2d07d3edd4b4de4a67200705c52f435e92bc3b21a605f3af91af,v0=4251a0f2bbd73dd1622bb01aedb334cab148be2a84bb3b1daea4af931e0172e2'
+      },
+      body: {
+        id: 'evt_xyz',
+        object: 'event'
+      }
+    }).catch(error => {
       console.error('An error occurred:', error);
       throw error;
-    }
+    });
 
     const sessionDoc = await apos.stripeCheckoutSession.find(apos.task.getReq(), {
       slug: 'cs_xyz',

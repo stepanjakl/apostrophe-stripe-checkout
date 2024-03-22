@@ -71,7 +71,7 @@ module.exports = {
               label: 'Payment intent ID',
               copyToClipboard: true,
               openInNewTab: true,
-              openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST_MODE ? '/test' : ''}/payments/`
+              openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST_MODE === 'false' ? '' : '/test'}/payments/`
             },
             amount_subtotal: {
               type: 'readOnly',
@@ -106,16 +106,16 @@ module.exports = {
               readOnly: true,
               fields: {
                 add: {
-                  // _id: {
-                  //     type: 'readOnly',
-                  //     label: 'ID'
-                  // },
+                  /* _id: {
+                      type: 'readOnly',
+                      label: 'ID'
+                  }, */
                   id: {
                     type: 'readOnly',
                     label: 'Product ID',
                     copyToClipboard: true,
                     openInNewTab: true,
-                    openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST_MODE ? '/test' : ''}/products/`
+                    openInNewTabPrepend: `${process.env.STRIPE_DASHBOARD_BASE_URL}${process.env.STRIPE_TEST_MODE === 'false' ? '' : '/test'}/products/`
                   },
                   description: {
                     type: 'readOnly',
