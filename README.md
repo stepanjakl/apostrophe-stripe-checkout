@@ -21,12 +21,13 @@ This module adds a custom route to initiate a Stripe Checkout instance and anoth
 
 [![Checkout](./public/images/checkout.png)](./public/images/checkout.png)
 
-
-&nbsp; | &nbsp; | &nbsp;
-:-------------------------:|:-------------------------:|:-------------------------:
-[![Admin UI 1](./public/images/admin-1.png)](./public/images/admin-1.png) | [![Admin UI 1](./public/images/admin-2.png)](./public/images/admin-2.png) | [![Admin UI 1](./public/images/admin-3.png)](./public/images/admin-3.png)
-
-
+<table border="0" style="border-collapse: collapse;">
+  <tr>
+    <td style="padding-left: 0;"><img src="./public/images/admin-1.png" alt="Admin UI 1"></td>
+    <td style="padding: 0;"><img src="./public/images/admin-2.png" alt="Admin UI 2"></td>
+    <td style="padding-right: 0;"><img src="./public/images/admin-3.png" alt="Admin UI 3"></td>
+  </tr>
+</table>
 
 ## Installation
 
