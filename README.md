@@ -17,18 +17,24 @@
     </p>
 </div>
 
+<br>
+
 This module adds a custom route to initiate a Stripe Checkout instance and another route triggered by a webhook listener for incoming completed session events and to save it in the database as a piece type that can be easily accessible via the admin UI.
+
+<br>
 
 <table>
 <tr>
 <td colspan="3"><a href="./public/images/checkout.png" target="_blank"><img src="./public/images/checkout.png" alt="Checkout"></a></td>
 </tr>
   <tr>
-    <td><a href="./public/images/admin-1.png" target="_blank"><img src="./public/images/admin-1.png" alt="Admin UI 1"></a></td>
-    <td><a href="./public/images/admin-2.png" target="_blank"><img src="./public/images/admin-2.png" alt="Admin UI 2"></a></td>
-    <td><a href="./public/images/admin-3.png" target="_blank"><img src="./public/images/admin-3.png" alt="Admin UI 3"></a></td>
+    <td><a href="./public/images/admin-1.png"><img src="./public/images/admin-1.png" alt="Admin UI 1"></a></td>
+    <td><a href="./public/images/admin-2.png"><img src="./public/images/admin-2.png" alt="Admin UI 2"></a></td>
+    <td><a href="./public/images/admin-3.png"><img src="./public/images/admin-3.png" alt="Admin UI 3"></a></td>
   </tr>
 </table>
+
+<br>
 
 ## Installation
 
@@ -38,11 +44,14 @@ Use your preferred package manager to install the module. You'll also need to in
 npm install stripe-checkout@npm:@stepanjakl/apostrophe-stripe-checkout
 
 npm install read-only-field@npm:@stepanjakl/apostrophe-read-only-field
+
 ```
 
 ## Examples
 
 **I highly recommend checking out the [stripe-examples](https://github.com/) repository with examples and full configuration that showcases how to set up a full e-commerce store experience.**
+
+<br>
 
 ## Usage
 
@@ -76,6 +85,8 @@ STRIPE_WEBHOOK_ENDPOINT_SECRET='whsec_xyz'
 [Read more on how to create a secret Stripe API key](https://docs.stripe.com/keys#create-api-secret-key)
 
 The webhook signing secret is generated and displayed on the initial output of the `listen` command - more on this below.
+
+<br>
 
 ### API Routes
 
@@ -126,7 +137,6 @@ fetch('/api/v1/stripe/checkout/sessions/create', requestOptions)
     console.error('Error:', error);
     // Handle errors, e.g., show an error message to the user
   });
-
 ```
 
 **`'/api/v1/stripe/checkout/webhook'`**
@@ -146,6 +156,8 @@ pm2 start --name stripe-listener "stripe listen --events checkout.session.comple
 ```
 
 [Read more about the Stripe webhooks](https://docs.stripe.com/webhooks/quickstart)
+
+<br>
 
 ## Limitations (TODOs)
 
