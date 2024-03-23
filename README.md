@@ -19,13 +19,14 @@
 
 This module adds a custom route to initiate a Stripe Checkout instance and another route triggered by a webhook listener for incoming completed session events and to save it in the database as a piece type that can be easily accessible via the admin UI.
 
-[![Checkout](./public/images/checkout.png)](./public/images/checkout.png)
-
-<table border="0" style="border-collapse: collapse;">
+<table>
+<tr>
+<td colspan="3"><a href="./public/images/checkout.png" target="_blank"><img src="./public/images/checkout.png" alt="Checkout"></a></td>
+</tr>
   <tr>
-    <td style="padding-left: 0;"><img src="./public/images/admin-1.png" alt="Admin UI 1"></td>
-    <td style="padding: 0;"><img src="./public/images/admin-2.png" alt="Admin UI 2"></td>
-    <td style="padding-right: 0;"><img src="./public/images/admin-3.png" alt="Admin UI 3"></td>
+    <td><a href="./public/images/admin-1.png" target="_blank"><img src="./public/images/admin-1.png" alt="Admin UI 1"></a></td>
+    <td><a href="./public/images/admin-2.png" target="_blank"><img src="./public/images/admin-2.png" alt="Admin UI 2"></a></td>
+    <td><a href="./public/images/admin-3.png" target="_blank"><img src="./public/images/admin-3.png" alt="Admin UI 3"></a></td>
   </tr>
 </table>
 
@@ -145,7 +146,6 @@ pm2 start --name stripe-listener "stripe listen --events checkout.session.comple
 ```
 
 [Read more about the Stripe webhooks](https://docs.stripe.com/webhooks/quickstart)
-
 
 ## Limitations (TODOs)
 
