@@ -1,10 +1,10 @@
 <div align="center">
     <h1>
-        Stripe Checkout For Apostrophe 3/4
+        Stripe Checkout For ApostropheCMS
     </h1>
     <p>
         <a aria-label="Apostrophe logo" href="https://v3.docs.apostrophecms.org">
-            <img src="https://img.shields.io/badge/MADE%20FOR%20APOSTROPHE%203/4-000000.svg?style=for-the-badge&logo=Apostrophe&labelColor=6516dd">
+            <img src="https://img.shields.io/badge/MADE%20FOR%20APOSTROPHECMS-000000.svg?style=for-the-badge&logo=Apostrophe&labelColor=6516dd">
         </a>
         <a aria-label="Personal logo" href="https://stepanjakl.com">
             <img src="https://img.shields.io/badge/STEPANJAKL.COM%20-000000.svg?style=for-the-badge&labelColor=EED500&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+PHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTAgMTV2NWgyMFY3LjVIMHY1aDE1LjA1VjE1SDBaTTIwIDBIMHY1aDIwVjBaIiAvPjwvc3ZnPg==">
@@ -44,12 +44,13 @@ Use your preferred package manager to install the module. You'll also need to in
 npm install stripe-checkout@npm:@stepanjakl/apostrophe-stripe-checkout
 
 npm install read-only-field@npm:@stepanjakl/apostrophe-read-only-field
-
 ```
+
+<br>
 
 ## Examples
 
-**I highly recommend checking out the [stripe-examples](https://github.com/) repository with examples and full configuration that showcases how to set up a full e-commerce store experience.**
+**It is highly recommended to explore the [stripe-examples](https://github.com/) repository, which offers a comprehensive set of examples and full configurations demonstrating how to set up a complete e-commerce store experience.**
 
 <br>
 
@@ -88,11 +89,13 @@ The webhook signing secret is generated and displayed on the initial output of t
 
 <br>
 
-### API Routes
+## API Routes
 
 The `stripe-checkout` module comes with two custom API routes:
 
-**`'/api/v1/stripe/checkout/sessions/create'`:**
+<br>
+
+#### `'/api/v1/stripe/checkout/sessions/create'`:
 
 This API route handles POST requests to create a new [Stripe Checkout Session](https://docs.stripe.com/payments/checkout/how-checkout-works). It is a central piece of the module and facilitates initiating payment transactions through Stripe. Here's an example of a request using the Fetch API:
 
@@ -139,7 +142,9 @@ fetch('/api/v1/stripe/checkout/sessions/create', requestOptions)
   });
 ```
 
-**`'/api/v1/stripe/checkout/webhook'`**
+<br>
+
+#### `'/api/v1/stripe/checkout/webhook'`:
 
 This API route is used by the local listener to receive asynchronous Stripe events and save the completed checkout session to the database.
 
@@ -159,8 +164,8 @@ pm2 start --name stripe-listener "stripe listen --events checkout.session.comple
 
 <br>
 
-## Limitations (TODOs)
+## TODOs (Limitations)
 
-- Option for one-time payments & Recurring payments
-- Create checkout session with more than 99 items
-- Checkout session styling and other extra options
+- Option for one-time and recurring payments
+- Enable checkout session with more than 99 items
+- Add other extra checkout session options (e.g. custom styles)
