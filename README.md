@@ -50,7 +50,7 @@ npm install read-only-field@npm:@stepanjakl/apostrophe-read-only-field
 
 ## Examples
 
-**It is highly recommended to explore the [stripe-examples](https://github.com/) repository, which offers a comprehensive set of examples and full configurations demonstrating how to set up a complete e-commerce store experience.**
+**It is highly recommended to explore the [apostrophe-stripe-examples](https://github.com/stepanjakl/apostrophe-stripe-examples) repository, which offers a comprehensive set of examples and full configurations demonstrating how to set up a complete e-commerce store experience.**
 
 <br>
 
@@ -62,12 +62,17 @@ First, add installed modules to your configuration in the `app.js` root file:
 require('apostrophe')({
   shortName: 'project-name',
   modules: {
+    // Custom fields
     'read-only-field': {},
+
+    // Stripe Checkout
     'stripe-checkout': {},
     'stripe-checkout/session': {}
   }
 });
 ```
+
+<br>
 
 Then, set global variables inside the `.env` file. It's important to set the `STRIPE_TEST_MODE` variable to anything other than `false` to enable [test mode](https://docs.stripe.com/test-mode).
 
