@@ -1,6 +1,7 @@
 {
     "extends": "stylelint-config-apostrophe",
     "rules": {
+        "selector-class-pattern": null,
         "scale-unlimited/declaration-strict-value": null,
         "scss/at-import-partial-extension": null,
         "scss/at-mixin-named-arguments": null,

@@ -1,7 +1,7 @@
 .apos-table__cell-field {
     &.apos-table__cell-field--stripeCheckoutSessionObject\.amount_total,
     &.apos-table__cell-field--stripeCheckoutSessionObject\.line_items_quantity_total {
-        font-weight: bold;
+        font-weight: 700;
     }
 
     &.apos-table__cell-field--stripeCheckoutSessionObject\.currency {
@@ -15,8 +15,8 @@
         padding: 5px;
         border: 1px solid var(--a-base-8);
         border-radius: var(--a-border-radius);
-        font-size: var(--a-type-tiny);
         color: var(--a-base-1);
+        font-size: var(--a-type-tiny);
         text-transform: capitalize;
         background-color: var(--a-base-10);
     }

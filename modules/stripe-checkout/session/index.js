@@ -51,11 +51,6 @@ module.exports = {
   },
   fields: {
     add: {
-      /* slug: {
-                type: 'readOnly',
-                label: 'Checkout session ID',
-                copyToClipboard: true
-            }, */
       stripeCheckoutSessionObject: {
         label: 'Stripe checkout session object',
         type: 'object',
