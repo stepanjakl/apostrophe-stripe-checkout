@@ -1,0 +1,53 @@
+name: lint-and-test
+run-name: lint and test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  lint-and-test:
+    name: Lint and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+
+    - name: Set up MongoDB
+      uses: supercharge/mongodb-github-action@v1
+      with:
+        mongodb-version: 7.0
+
+    - name: Install Dependencies
+      run: |
+        sudo apt update
+        sudo apt install net-tools -y
+        mkdir -p tmp
+        ls
+        curl -s https://api.github.com/repos/stripe/stripe-mock/releases/latest | jq -r '.assets[] | select(.name | contains("linux_amd64") and endswith(".tar.gz")) | .browser_download_url' | xargs -I{} sh -c 'echo "Downloading {}" && curl -L {} -o tmp/stripe-mock.tar.gz'
+        tar -xvf tmp/stripe-mock.tar.gz -C tmp
+        mv tmp/stripe-mock /usr/local/bin/
+        chmod -R 755 /usr/local/bin/stripe-mock
+        rm tmp/stripe-mock.tar.gz
+        npm install
+        npm install pm2 -g
+
+    - name: Start stripe-mock
+      run: pm2 start --name stripe-mock stripe-mock -- -http-addr 127.0.0.1:12111 -https-addr 127.0.0.1:12112
+
+    - name: Display active connections
+      run: sleep 5 && netstat -tuln
+
+    - name: Run ESLint
+      run: npm run eslint
+
+    - name: Run Mocha Tests
+      run: npm run mocha

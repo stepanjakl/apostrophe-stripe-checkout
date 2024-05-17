@@ -4,16 +4,16 @@ const path = require('path');
 const Stripe = require('stripe'); // Importing the Stripe SDK
 let stripe = null;
 
-if (process.env.STRIPE_TEST_MODE === 'false') {
-  // Using Stripe production mode settings with the API key
-  stripe = Stripe(process.env.STRIPE_KEY);
-} else {
-  // Using Stripe test mode settings
+if (process.env.STRIPE_MOCK_TEST_MODE === 'true') {
+  // Using Stripe mock test mode settings
   stripe = new Stripe('sk_test_xyz', {
-    host: 'localhost',
+    host: '127.0.0.1',
     protocol: 'http',
     port: 12111
   });
+} else {
+  // Using Stripe production mode settings with the API key
+  stripe = Stripe(process.env.STRIPE_KEY);
 }
 
 const bodyParser = require('body-parser'); // Importing the body-parser middleware
@@ -149,15 +149,9 @@ module.exports = {
         '/api/v1/stripe/checkout/sessions/create': async function (req) {
           try {
             // Create a new checkout session with the provided parameters
-            const checkoutSession = await stripe.checkout.sessions.create({
-              line_items: req.body.line_items,
-              locale: 'en',
-              mode: 'payment',
-              success_url: req.body.success_url,
-              cancel_url: req.body.cancel_url
-            });
+            const checkoutSession = await stripe.checkout.sessions.create(req.body);
             // Return the URL of the created checkout session
-            return checkoutSession.url;
+            return checkoutSession;
           } catch (error) {
             req.res.status(500).send(error);
           }
