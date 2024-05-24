@@ -23,7 +23,7 @@ describe('Apostrophe - Stripe Checkout Integration Tests', function () {
             session: {
               secret: 'secret'
             },
-            csrfExceptions: [ '/api/v1/stripe/checkout/sessions/create' ]
+            csrfExceptions: [ '/api/v1/stripe-checkout/sessions/create' ]
           }
         },
         'read-only-field': {},
@@ -68,7 +68,7 @@ describe('Apostrophe - Stripe Checkout Integration Tests', function () {
     let response;
 
     try {
-      response = await apos.http.post('/api/v1/stripe/checkout/sessions/create', {
+      response = await apos.http.post('/api/v1/stripe-checkout/sessions/create', {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json'
@@ -99,7 +99,7 @@ describe('Apostrophe - Stripe Checkout Integration Tests', function () {
 
   it('should send request to webhook endpoint and save the completed checkout session to the database', async function () {
     try {
-      await apos.http.post('/api/v1/stripe/checkout/webhook', {
+      await apos.http.post('/api/v1/stripe-checkout/webhook', {
         headers: {
           'stripe-signature': 't=1711059559,v1=9dd216ac7ffc2d07d3edd4b4de4a67200705c52f435e92bc3b21a605f3af91af,v0=4251a0f2bbd73dd1622bb01aedb334cab148be2a84bb3b1daea4af931e0172e2'
         },

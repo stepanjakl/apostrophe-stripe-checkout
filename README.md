@@ -61,7 +61,7 @@ npm install read-only-field@npm:@stepanjakl/apostrophe-read-only-field
 
 ## Examples
 
-**It is highly recommended to explore the [apostrophe-stripe-examples](https://github.com/stepanjakl/apostrophe-stripe-examples) repository, which offers a comprehensive set of examples and full configurations demonstrating how to set up a complete e-commerce store experience.**
+**It is highly recommended to explore the [`apostrophe-stripe-examples`](https://github.com/stepanjakl/apostrophe-stripe-examples) repository, which offers a comprehensive set of examples and full configurations demonstrating how to set up a complete e-commerce store experience.**
 
 <br>
 
@@ -111,7 +111,7 @@ The `stripe-checkout` module comes with two custom API routes:
 
 <br>
 
-#### `'/api/v1/stripe/checkout/sessions/create'`:
+#### `'/api/v1/stripe-checkout/sessions/create'`:
 
 This API route handles POST requests to create a new [Stripe Checkout Session](https://docs.stripe.com/payments/checkout/how-checkout-works). It is a central piece of the module and facilitates initiating payment transactions through Stripe. Here's an example of a request using the Fetch API directly in the browser:
 
@@ -138,7 +138,7 @@ const requestOptions = {
   })
 };
 
-fetch('/api/v1/stripe/checkout/sessions/create', requestOptions)
+fetch('/api/v1/stripe-checkout/sessions/create', requestOptions)
   .then(response => {
     if (!response.ok) {
       throw new Error('Failed to create checkout session');
@@ -160,20 +160,20 @@ fetch('/api/v1/stripe/checkout/sessions/create', requestOptions)
 
 <br>
 
-#### `'/api/v1/stripe/checkout/webhook'`:
+#### `'/api/v1/stripe-checkout/webhook'`:
 
 This API route is used by the local listener to receive asynchronous Stripe events and save the completed checkout sessions to the database.
 
 Set up event forwarding with the [Stripe CLI](https://docs.stripe.com/stripe-cli) and send all Stripe events to your local webhook endpoint for testing and/or monitoring purposes:
 
 ```zsh
-stripe listen --forward-to localhost:5000/api/v1/stripe/checkout/webhook
+stripe listen --forward-to localhost:5000/api/v1/stripe-checkout/webhook
 ```
 
 Use the PM2 process manager to run the `listen` command in production:
 
 ```zsh
-pm2 start --name stripe-listener "stripe listen --events checkout.session.completed --forward-to localhost:5000/api/v1/stripe/checkout/webhook"
+pm2 start --name stripe-listener "stripe listen --events checkout.session.completed --forward-to localhost:5000/api/v1/stripe-checkout/webhook"
 ```
 
 [Read more about the Stripe webhooks](https://docs.stripe.com/webhooks/quickstart)
