@@ -1,6 +1,6 @@
 {
     "name": "@stepanjakl/apostrophe-stripe-checkout",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Stripe Checkout For ApostropheCMS",
     "keywords": [
         "apostrophe",

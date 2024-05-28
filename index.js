@@ -59,62 +59,59 @@ module.exports = {
     return {
       post: {
         [stripeWebhookEndpoint]: async function (req, res, next) {
-          class StripeCheckoutHandler {
-            async handleCheckoutSession(req, res) {
-              try {
-                if (!req.headers['stripe-signature']) {
-                  throw new Error('Stripe signature was not provided in the header.');
-                }
-                const event = await this.constructStripeEvent(req);
-                if (event.type === 'checkout.session.completed') {
-                  const checkoutSession = await stripe.checkout.sessions.retrieve(event.data.object.id);
-                  const checkoutSessionInstance = this.createCheckoutSessionInstance(checkoutSession);
-                  await this.insertCheckoutSessionInstance(checkoutSessionInstance);
-                }
-                return res.status(200).end();
-              } catch (error) {
-                console.error('Error handling checkout session:', error);
-                return res.status(500).send(error.message);
+          async function handleCheckoutSession(req, res) {
+            try {
+              if (!req.headers['stripe-signature']) {
+                throw new Error('Stripe signature was not provided in the header.');
               }
-            }
-
-            async constructStripeEvent(req) {
-              if (process.env.STRIPE_MOCK_TEST_MODE === 'true') {
-                return {
-                  type: 'checkout.session.completed',
-                  data: { object: { id: 'cs_xyz' } }
-                };
-              } else {
-                return stripe.webhooks.constructEvent(req.body, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET);
+              const event = await constructStripeEvent(req);
+              if (event.type === 'checkout.session.completed') {
+                const checkoutSession = await stripe.checkout.sessions.retrieve(event.data.object.id);
+                const checkoutSessionInstance = createCheckoutSessionInstance(checkoutSession);
+                await insertCheckoutSessionInstance(checkoutSessionInstance);
               }
-            }
-
-            createCheckoutSessionInstance(checkoutSession) {
-              const checkoutSessionInstance = self.apos.stripeCheckoutSession.newInstance();
-              checkoutSessionInstance.slug = checkoutSession.id;
-              checkoutSessionInstance.stripeCheckoutSessionObject = checkoutSession;
-              checkoutSessionInstance.stripeCheckoutSessionObject.created_timestamp = new Date(checkoutSession.created * 1000).toISOString();
-              checkoutSessionInstance.stripeCheckoutSessionObject.amount_subtotal = (checkoutSession.amount_subtotal / 100).toFixed(2);
-              checkoutSessionInstance.stripeCheckoutSessionObject.amount_total = (checkoutSession.amount_total / 100).toFixed(2);
-              return checkoutSessionInstance;
-            }
-
-            async insertCheckoutSessionInstance(checkoutSessionInstance) {
-              const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSessionInstance.slug, { limit: 99 });
-              checkoutSessionInstance.stripeCheckoutSessionObject.line_items_quantity_total = lineItems.data.reduce((sum, item) => sum + item.quantity, 0);
-              lineItems.data.forEach(item => {
-                [ 'amount_total', 'amount_subtotal', 'amount_discount', 'amount_tax' ].forEach(field => {
-                  item[field] = (item[field] / 100).toFixed(2);
-                });
-                item.price.unit_amount = (item.price.unit_amount / 100).toFixed(2);
-              });
-              checkoutSessionInstance.stripeCheckoutSessionLineItemsObject = lineItems;
-              await self.apos.stripeCheckoutSession.insert(req, checkoutSessionInstance, { permissions: false });
+              return res.status(200).end();
+            } catch (error) {
+              console.error('Error handling checkout session:', error);
+              return res.status(500).send(error.message);
             }
           }
 
-          const stripeCheckoutHandler = new StripeCheckoutHandler();
-          stripeCheckoutHandler.handleCheckoutSession(req, res);
+          async function constructStripeEvent(req) {
+            if (process.env.STRIPE_MOCK_TEST_MODE === 'true') {
+              return {
+                type: 'checkout.session.completed',
+                data: { object: { id: 'cs_xyz' } }
+              };
+            } else {
+              return stripe.webhooks.constructEvent(req.body, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_ENDPOINT_SECRET);
+            }
+          }
+
+          function createCheckoutSessionInstance(checkoutSession) {
+            const checkoutSessionInstance = self.apos.stripeCheckoutSession.newInstance();
+            checkoutSessionInstance.slug = checkoutSession.id;
+            checkoutSessionInstance.stripeCheckoutSessionObject = checkoutSession;
+            checkoutSessionInstance.stripeCheckoutSessionObject.created_timestamp = new Date(checkoutSession.created * 1000).toISOString();
+            checkoutSessionInstance.stripeCheckoutSessionObject.amount_subtotal = (checkoutSession.amount_subtotal / 100).toFixed(2);
+            checkoutSessionInstance.stripeCheckoutSessionObject.amount_total = (checkoutSession.amount_total / 100).toFixed(2);
+            return checkoutSessionInstance;
+          }
+
+          async function insertCheckoutSessionInstance(checkoutSessionInstance) {
+            const lineItems = await stripe.checkout.sessions.listLineItems(checkoutSessionInstance.slug, { limit: 99 });
+            checkoutSessionInstance.stripeCheckoutSessionObject.line_items_quantity_total = lineItems.data.reduce((sum, item) => sum + item.quantity, 0);
+            lineItems.data.forEach(item => {
+              [ 'amount_total', 'amount_subtotal', 'amount_discount', 'amount_tax' ].forEach(field => {
+                item[field] = (item[field] / 100).toFixed(2);
+              });
+              item.price.unit_amount = (item.price.unit_amount / 100).toFixed(2);
+            });
+            checkoutSessionInstance.stripeCheckoutSessionLineItemsObject = lineItems;
+            await self.apos.stripeCheckoutSession.insert(req, checkoutSessionInstance, { permissions: false });
+          }
+
+          await handleCheckoutSession(req, res);
         }
       }
     };

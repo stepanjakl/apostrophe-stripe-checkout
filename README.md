@@ -167,19 +167,19 @@ This API route is used by the local listener to receive asynchronous Stripe even
 Set up event forwarding with the [Stripe CLI](https://docs.stripe.com/stripe-cli) and send all Stripe events to your local webhook endpoint for testing and/or monitoring purposes:
 
 ```zsh
-stripe listen --forward-to localhost:5000/api/v1/stripe-checkout/webhook
+stripe listen --events=payment_intent.succeeded --forward-to localhost:5000/api/v1/stripe-checkout/webhook
 ```
 
 Use the PM2 process manager to run the `listen` command in production:
 
 ```zsh
-pm2 start --name stripe-listener "stripe listen --events checkout.session.completed --forward-to localhost:5000/api/v1/stripe-checkout/webhook"
+pm2 start --name stripe-listener "stripe listen --events=checkout.session.completed --forward-to localhost:5000/api/v1/stripe-checkout/webhook"
 ```
 
 [Read more about the Stripe webhooks](https://docs.stripe.com/webhooks/quickstart)
 
 <br>
 
-## TODOs (Limitations)
+## TODOs (Improvements)
 
-- Enable checkout session with more than 99 items
+- Enable checkout session with more than 99 products
