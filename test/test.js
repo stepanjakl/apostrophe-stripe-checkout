@@ -97,6 +97,31 @@ describe('Apostrophe - Stripe Checkout Integration Tests', function () {
     assert(response.id, 'Response should contain an "id" parameter');
   });
 
+  it('should respond with a clean 400 error (not a double-send crash) when Stripe rejects the params', async function () {
+    let error;
+
+    try {
+      await apos.http.post('/api/v1/stripe-checkout/sessions/create', {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          // Invalid enum value; stripe-mock rejects this with a 400.
+          mode: 'bogus',
+          success_url: apos.baseUrl,
+          cancel_url: apos.baseUrl
+        })
+      });
+    } catch (e) {
+      error = e;
+    }
+
+    assert(error, 'The request should have been rejected');
+    assert.strictEqual(error.status, 400, 'Should respond with a 400, not a 500 double-send');
+    assert(error.body && error.body.message, 'Error response should carry a message, not an empty object');
+  });
+
   it('should send request to webhook endpoint and save the completed checkout session to the database', async function () {
     try {
       await apos.http.post('/api/v1/stripe-checkout/webhook', {

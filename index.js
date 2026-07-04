@@ -123,7 +123,10 @@ module.exports = {
           try {
             return await stripe.checkout.sessions.create(req.body);
           } catch (error) {
-            req.res.status(500).send(error);
+            // Let Apostrophe send a single, structured error response.
+            // Manually calling res.send() here and then returning would make
+            // the apiRoute wrapper send a second response (ERR_HTTP_HEADERS_SENT).
+            throw self.apos.error('invalid', error.message);
           }
         }
       }

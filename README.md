@@ -158,6 +158,18 @@ fetch('/api/v1/stripe-checkout/sessions/create', requestOptions)
   });
 ```
 
+> **Security note:** this route forwards the request body directly to Stripe's
+> [`checkout.sessions.create`](https://docs.stripe.com/api/checkout/sessions/create),
+> and it is not authenticated — this is intentional, since the client builds the
+> checkout (line items, mode, URLs) and the actual prices are defined in your
+> Stripe account, not by the caller. However, it does mean anyone who can reach
+> your site can create Checkout Sessions. If that matters for your deployment,
+> harden it by any of: requiring an authenticated `req.user`, whitelisting the
+> fields you forward to Stripe (e.g. `line_items`, `mode`, `ui_mode`, `locale`,
+> `success_url`, `cancel_url`, `redirect_on_completion`), and/or validating that
+> every `line_items[].price` matches a price synced by
+> [`apostrophe-stripe-products`](https://github.com/stepanjakl/apostrophe-stripe-products).
+
 <br>
 
 #### `'/api/v1/stripe-checkout/webhook'`:
